@@ -14,7 +14,7 @@ TESTS = {
             "answer": True
         },
         {
-            "input": ["welcome to сheckio", "weeeelcome to cccheckio"],
+            "input": ["welcome to checkio", "weeeelcome to cccheckio"],
             "answer": True
         },
         {
