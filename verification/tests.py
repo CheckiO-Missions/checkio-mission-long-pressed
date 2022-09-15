@@ -46,6 +46,10 @@ TESTS = {
         {
             "input": ["hello from usaaaa", "hello from japannnn"],
             "answer": False
+        },
+        {
+            "input": ["welcome boss!", "welcooome bos!!"],
+            "answer": False
         }
     ]
 }
