@@ -1,0 +1,170 @@
+<body data-author="freeman_lex">
+<div class="question-answer">
+    <div class="question">
+        Je n'ai aucune idée de la manière de commencer à résoudre cette mission.
+    </div>
+    <div class="answer">
+        <p>
+            💡 L'idée générale est de diviser les deux chaînes données en listes de groupes (comme des listes) de mêmes caractères et de comparer ces deux listes paire par paire. Si chaque paire de listes internes est composée du même caractère et que la liste de la variante <b class="code">typed</b> contient au moins le même nombre de caractères que la liste de <b class="code">text</b>, alors les messages donnés correspondent.   
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Ok, par quoi dois-je commencer?
+    </div>
+    <div class="answer">
+        <p>
+            Vous aurez besoin de la fonction <a target="_blank" href="https://docs.python.org/3/library/itertools.html#itertools.groupby">groupby()</a> du module standard <a target="_blank" href="https://docs.python.org/3/library/itertools.html">itertools</a> pour diviser les deux chaînes en listes de groupes. Importez-la donc.
+        </p>
+        <pre class="brush: python">
+from itertools import groupby
+        </pre>
+        <p>
+            Après avoir appliqué <b class="code">groupby()</b> sur la chaîne, vous obtiendrez un objet groupby. Si vous itérez sur cet objet, vous obtiendrez des tuples avec des caractères distincts et un objet groupby. Pour cette solution, vous n'aurez pas besoin du caractère (remplacez-le par "_" lors de l'itération), mais vous devrez convertir l'objet grouper en un autre objet qui a une longueur (par exemple, une liste).
+        </p>
+        <p>
+            En utilisant <a target="_blank" href="https://www.w3schools.com/python/python_lists_comprehension.asp">list comprehension</a>, itérez sur l'objet groupby et créez une liste d'objets grouper listés pour <b class="code">text1</b>. 
+        </p>
+        <pre class="brush: python">
+text1 = [list(g) for _, g in groupby(text)]
+        </pre>
+        <p>
+            Répétez l'opération pour <b class="code">typed1</b>.
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Vous avez de quoi faire! Nous faisons tellement de choses avec une ligne aussi courte. Comment comparer correctement ces listes maintenant?
+    </div>
+    <div class="answer">
+        <p>
+            Nous devons effectuer quelques comparaisons et chacune d'entre elles doit être <b class="code">True</b> pour valider la correspondance des chaînes données. Nous pouvons joindre les comparaisons avec l'opérateur <b class="code">and</b>, mais dans ce cas, nous utilisons la fonction <a target="_blank" href="https://www.w3schools.com/python/ref_func_all.asp">all()</a> avec une seule séquence de conditions comme argument.
+        </p>
+        <pre class="brush: python">
+return all((...))
+        </pre>
+        <p>
+            D'après la description, les chaînes données ne doivent pas être identiques (pas de lettres longues). Vous devez donc d'abord vérifier qu'elles ne sont pas égales.
+        </p>
+        <pre class="brush: python">
+return all((text!= typed, ...))
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Ok, que dois-je vérifier ensuite?
+    </div>
+    <div class="answer">
+        <p>
+            Les chaînes données peuvent avoir des lettres longuement pressées, mais en général elles devraient être identiques. Elles doivent contenir les mêmes lettres. Puisque chaque liste intérieure de <b class="code">text1, typed1</b> représente une lettre distincte, la longueur de <b class="code">text1</b> doit être la même que celle de <b class="code">typed1</b>. C'est votre deuxième condition.
+        </p>
+        <pre class="brush: python">
+return all((text!= typed, len(typed1) == len(text1), ...))
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Je ne comprends pas comment comparer chaque paire de listes internes des deux listes générales.
+    </div>
+    <div class="answer">
+        <p>
+            Oui, cette étape nécessite quelques explications supplémentaires. Tout d'abord, utilisez la fonction <a target="_blank" href="https://www.w3schools.com/python/ref_func_zip.asp">zip()</a> et itérez sur son résultat pour effectuer cette comparaison par paire.
+        </p>
+        <pre class="brush: python">
+...for a, b in zip(text1, typed1)
+        </pre>
+        <p>
+            Pourquoi avons-nous besoin de ces listes <b class="code">a, b</b> pour valider les lettres longuement pressées? Chaque liste contient un certain nombre de lettres identiques, mais nous avons également besoin de la même lettre dans les deux listes! Vous devez donc comparer deux éléments quelconques de listes différentes.
+        </p>
+        <pre class="brush: python">
+a[0] == b[0]
+        </pre>
+        <p>
+            Et si la lettre est longuement pressée, le nombre de lettres dans la liste de la chaîne <b class="code">typed</b> doit être supérieur ou égal à celui de la liste de la chaîne <b class="code">text</b>.
+        </p>
+        <pre class="brush: python">
+len(b)>= len(a)
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Aidez-moi s'il vous plaît à joindre cette dernière étape ensemble.
+    </div>
+    <div class="answer">
+        <p>
+            En utilisant la compréhension de liste, créez une liste des résultats des deux conditions ensemble (opérateur<b class="code">and</b> ) après avoir itéré sur des listes générales zippées.
+        </p>
+        <pre class="brush: python">
+[b[0] == a[0] and len(b)>= len(a) for a, b in zip(text1, typed1)]
+        </pre>
+        <p>
+            Mais voici une astuce! À l'intérieur des fonctions <b class="code">all()</b> doit se trouver une séquence de conditions, et non une liste. Utilisez <a target="_blank" href="https://geekflare.com/python-unpacking-operators/">unpacking operator</a> pour extraire les conditions de la liste de conditions. Avec cet opérateur, vous pouvez inclure votre liste de conditions dans la fonction <b class="code">all()</b>!
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Alors, à quoi devrait ressembler ma solution finale?
+    </div>
+    <div class="answer">
+        <p>
+            Il vous suffit de combiner tous les indices précédents et d'envelopper votre code dans une expression de fonction. Il est fortement recommandé d'utiliser des indications de type pour les données d'entrée et de sortie.
+        </p>
+        <p>Voici la solution complète:</p>
+        <div class="spoiler">
+        <pre class="brush: python">
+from itertools import groupby
+
+
+def long_pressed(text: str, typed: str) -> bool:
+    
+    text1 = [list(g) for _, g in groupby(text)]
+    typed1 = [list(g) for _, g in groupby(typed)]
+    
+    return all((text!= typed,
+                len(typed1) == len(text1),
+                *[b[0] == a[0] and len(b)>= len(a) for a, b in zip(text1, typed1)]))
+        </pre>
+        </div>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Montrez-moi d'autres solutions!<br />
+        parce que je veux être une vraie 🥇 Python Ninnjaa!
+    </div>
+    <div class="answer">
+        <p>Bien sûr, prenez-le!</p>
+        <p>
+            En utilisant le module d'expression régulière, ajoutez un caractère spécial <b class="code">+</b> (répétitif) après chaque caractère <b class="code">text</b>, échappez les caractères spéciaux (supprimez toute signification spéciale possible) et comparez la chaîne résultante avec <b class="code">typed</b>.
+        </p>
+        <div class="spoiler">
+        <pre class="brush: python">
+from re import sub, fullmatch
+
+
+def long_pressed(text: str, typed: str) -> bool:
+
+    pattern = sub(r'(\S)', r'\1+', text)
+    pattern = sub(r'([\'"/?!.,;])', r'\\\1', pattern)
+
+    return bool(fullmatch(pattern, typed)) and text!= typed   
+        </pre>
+        </div>
+        <p>Cliquez sur <b>Best Solutions</b> dans le menu mission et découvrez de nombreuses autres solutions intéressantes!</p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Merci beaucoup! Je comprends mieux maintenant! Tout fonctionne bien!
+    </div>
+    <div class="answer">
+        👍 Heureux de l'apprendre!
+    </div>
+</div>
+</body>
