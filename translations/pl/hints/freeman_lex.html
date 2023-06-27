@@ -1,0 +1,170 @@
+<body data-author="freeman_lex">
+<div class="question-answer">
+    <div class="question">
+        Nie mam pojęcia, jak zacząć rozwiązywać tę misję.
+    </div>
+    <div class="answer">
+        <p>
+            ogólny pomysł polega na podzieleniu obu podanych ciągów na listę grup (jako list) tych samych znaków i porównaniu tych dwóch list para po parze. Jeśli każda para wewnętrznych list składa się z tego samego znaku, a lista wariantu <b class="code">typed</b> ma co najmniej taką samą liczbę znaków jak lista z <b class="code">text</b>, to podane wiadomości są zgodne.   
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Ok, od czego powinienem zacząć?
+    </div>
+    <div class="answer">
+        <p>
+            Będzie Pan potrzebował funkcji <a target="_blank" href="https://docs.python.org/3/library/itertools.html#itertools.groupby">groupby()</a> ze standardowego modułu <a target="_blank" href="https://docs.python.org/3/library/itertools.html">itertools</a>, aby podzielić oba ciągi na listy grup. Proszę więc ją zaimportować.
+        </p>
+        <pre class="brush: python">
+from itertools import groupby
+        </pre>
+        <p>
+            Po zastosowaniu <b class="code">groupby()</b> na łańcuchu otrzymają Państwo obiekt groupby. Po iteracji nad nim otrzymają Państwo krotki z odrębnym znakiem i obiektem groupby. W tym rozwiązaniu nie będzie potrzebny znak (proszę zamienić na "_" podczas iteracji), ale trzeba przekonwertować obiekt groupby na inny obiekt, który ma długość (np. listę).
+        </p>
+        <p>
+            Za pomocą <a target="_blank" href="https://www.w3schools.com/python/python_lists_comprehension.asp">list comprehension</a> proszę wykonać iterację po obiekcie groupby i utworzyć listę wymienionych obiektów grouper dla <b class="code">text1</b>. 
+        </p>
+        <pre class="brush: python">
+text1 = [list(g) for _, g in groupby(text)]
+        </pre>
+        <p>
+            Proszę powtórzyć to samo dla <b class="code">typed1</b>.
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Wow! Robimy tak wiele z tak krótką linią. Jak teraz właściwie porównać te listy?
+    </div>
+    <div class="answer">
+        <p>
+            Musimy wykonać kilka porównań i każde z nich musi być <b class="code">True</b>, aby zweryfikować zgodność podanych ciągów. Możemy połączyć porównania za pomocą operatora <b class="code">and</b>, ale w tym przypadku używamy funkcji <a target="_blank" href="https://www.w3schools.com/python/ref_func_all.asp">all()</a> z pojedynczą sekwencją warunków jako argumentem.
+        </p>
+        <pre class="brush: python">
+return all((...))
+        </pre>
+        <p>
+            Zgodnie z opisem, podane ciągi nie powinny być takie same (bez długich liter). Proszę więc najpierw sprawdzić, czy nie są one równe.
+        </p>
+        <pre class="brush: python">
+return all((text!= typed, ...))
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Ok, co powinienem sprawdzić w następnej kolejności?
+    </div>
+    <div class="answer">
+        <p>
+            Podane ciągi mogą mieć długie litery, ale generalnie powinny być takie same. Muszą zawierać te same litery. Ponieważ każda wewnętrzna lista w <b class="code">text1, typed1</b> reprezentuje odrębną literę, długość <b class="code">text1</b> musi być taka sama jak długość <b class="code">typed1</b>. To jest Pana drugi warunek.
+        </p>
+        <pre class="brush: python">
+return all((text!= typed, len(typed1) == len(text1), ...))
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Nie rozumiem, jak porównać każdą parę list wewnętrznych z obu list ogólnych.
+    </div>
+    <div class="answer">
+        <p>
+            Tak, ten krok wymaga dodatkowych wyjaśnień. Po pierwsze, proszę użyć funkcji <a target="_blank" href="https://www.w3schools.com/python/ref_func_zip.asp">zip()</a> i wykonać iterację po jej wyniku, aby dokonać porównania par.
+        </p>
+        <pre class="brush: python">
+...for a, b in zip(text1, typed1)
+        </pre>
+        <p>
+            Czego potrzebujemy od tych list <b class="code">a, b</b>, aby zweryfikować długo naciśnięte litery? Każda lista zawiera pewną liczbę tych samych liter, ale potrzebujemy również tej samej litery na obu listach! Proszę więc porównać dowolne dwa elementy z różnych list.
+        </p>
+        <pre class="brush: python">
+a[0] == b[0]
+        </pre>
+        <p>
+            A jeśli litera jest długo naciśnięta, liczba liter na liście z ciągu <b class="code">typed</b> musi być nie mniejsza niż na liście z ciągu <b class="code">text</b>.
+        </p>
+        <pre class="brush: python">
+len(b)>= len(a)
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Proszę mi pomóc połączyć ten ostatni krok razem.
+    </div>
+    <div class="answer">
+        <p>
+            Używając list comprehension proszę utworzyć listę wyników obu warunków razem (operator<b class="code">and</b> ) po iteracji po spakowanych listach ogólnych.
+        </p>
+        <pre class="brush: python">
+[b[0] == a[0] and len(b)>= len(a) for a, b in zip(text1, typed1)]
+        </pre>
+        <p>
+            Ale, tutaj jest sztuczka! Wewnątrz funkcji <b class="code">all()</b> powinna znajdować się sekwencja warunków, a nie lista. Proszę użyć <a target="_blank" href="https://geekflare.com/python-unpacking-operators/">unpacking operator</a>, aby wyodrębnić warunki z listy warunków. Za pomocą tego operatora mogą Państwo dołączyć listę warunków do funkcji <b class="code">all()</b>!
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Jak więc powinno wyglądać moje ostateczne rozwiązanie?
+    </div>
+    <div class="answer">
+        <p>
+            Wystarczy połączyć wszystkie poprzednie podpowiedzi i zawinąć kod w wyrażenie funkcyjne. Używanie podpowiedzi typu dla danych wejściowych i wyjściowych jest wysoce zalecane.
+        </p>
+        <p>Poniżej znajduje się całe rozwiązanie:</p>
+        <div class="spoiler">
+        <pre class="brush: python">
+from itertools import groupby
+
+
+def long_pressed(text: str, typed: str) -> bool:
+    
+    text1 = [list(g) for _, g in groupby(text)]
+    typed1 = [list(g) for _, g in groupby(typed)]
+    
+    return all((text!= typed,
+                len(typed1) == len(text1),
+                *[b[0] == a[0] and len(b)>= len(a) for a, b in zip(text1, typed1)]))
+        </pre>
+        </div>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Proszę pokazać mi więcej rozwiązań!<br />
+        bo chcę być prawdziwą 🥇 Python Ninnjaa!
+    </div>
+    <div class="answer">
+        <p>Jasne, proszę łapać!</p>
+        <p>
+            Za pomocą modułu wyrażeń regularnych proszę dodać znak specjalny <b class="code">+</b> (powtarzający się) po każdym znaku <b class="code">text</b>, uciec od znaków specjalnych (usunąć z nich wszelkie możliwe specjalne znaczenie) i porównać wynikowy ciąg z <b class="code">typed</b>.
+        </p>
+        <div class="spoiler">
+        <pre class="brush: python">
+from re import sub, fullmatch
+
+
+def long_pressed(text: str, typed: str) -> bool:
+
+    pattern = sub(r'(\S)', r'\1+', text)
+    pattern = sub(r'([\'"/?!.,;])', r'\\\1', pattern)
+
+    return bool(fullmatch(pattern, typed)) and text!= typed   
+        </pre>
+        </div>
+        <p>Proszę kliknąć <b>Best Solutions</b> w menu misji i zobaczyć wiele innych ciekawych rozwiązań!</p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Dzięki! Teraz wiem i rozumiem więcej! Wszystko działa jak należy!
+    </div>
+    <div class="answer">
+        miło mi to słyszeć!
+    </div>
+</div>
+</body>

@@ -1,0 +1,35 @@
+<!-- Describe task in general -->
+<p>
+    <i>"Kocham Pana tak bardzo! Jest Pan najlepszy!!!"</i>
+</p>
+<p>
+    Czasami Państwa przyjaciele chcą wyrazić swoje uczucia w wiadomości, a czasami klawisz z literą utknie na klawiaturze. W obu przypadkach otrzymamy "długo naciskaną literę", która zostanie wydrukowana więcej niż jeden raz.
+    Otrzymują Państwo dwa ciągi znaków. Pierwszy ciąg to oryginalna wiadomość tekstowa. Drugi ciąg to wydrukowana wiadomość, która może zawierać kilka (lub nawet żadną) długo naciśniętą literę. Może się zdarzyć, że wiadomość została napisana w pośpiechu, więc proszę nie zapomnieć sprawdzić, czy wszystkie litery zgadzają się z tymi w oryginale. Proszę zwrócić <b>{% if is_js %}t{% else %}T{% endif %}rue</b> jeśli wydrukowana wiadomość jest zgodna z oryginałem, biorąc pod uwagę ewentualne długie naciśnięcia klawiszy. Lub <b>{% if is_js %}f{% else %}F{% endif %}alse</b> jeśli występują błędy lub nie ma długo naciśniętych liter.
+</p>
+<!-- Explain input and output values -->
+<p>
+   <strong>Wejście:</strong> String <span>(str{% if is_js %}ing{% endif %})</span>.
+</p>
+
+<p>
+   <strong>Wyjście:</strong> Wartość logiczna <span>(bool{% if is_js %}ean{% endif %})</span>.
+</p>
+
+
+<!-- Put some usage examples -->
+<div class="for_info_only">
+<p>
+<strong>Przykłady:</strong>
+</p>
+<pre class="brush: {% if is_js %}javascript{% else %}python{% endif %}">{{init_code_tmpl}}</pre>
+</div>
+
+<!-- Here you can explain some constraints for input-->
+<!-- The section is optional -->
+<p>
+    <strong>Warunki wstępne:</strong>
+    <ul>
+    <li><i>"text" i "typed" składają się tylko z małych liter angielskich i symboli "'/?!,;</i></li>
+    <li><i>1 &lt;= len(text), len(typed) &lt;= 1000</i>.</li>
+    </ul>
+</p>
