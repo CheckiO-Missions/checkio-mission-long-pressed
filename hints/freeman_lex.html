@@ -1,0 +1,170 @@
+<body data-author="freeman_lex">
+<div class="question-answer">
+    <div class="question">
+        I have no idea how to start solving this mission.
+    </div>
+    <div class="answer">
+        <p>
+            💡 The general idea is to split both given strings into list of groups (as lists) of the same characters and compare these two lists pair by pair. If each pair of inner lists consists of the same character and list of <b class="code">typed</b> variant has at least the same number of characters than list from <b class="code">text</b> then the given messages match.   
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Ok, what should I start from?
+    </div>
+    <div class="answer">
+        <p>
+            You will need <a target="_blank" href="https://docs.python.org/3/library/itertools.html#itertools.groupby">groupby()</a> function from <a target="_blank" href="https://docs.python.org/3/library/itertools.html">itertools</a> standard module to split both strings into lists of groups. So import it.
+        </p>
+        <pre class="brush: python">
+from itertools import groupby
+        </pre>
+        <p>
+            After applying <b class="code">groupby()</b> on string you will receive an groupby object. If you iterate over it you receive tuples with distinct character and grouper object. For this solution you will no need the character (replace with "_" while iterating), but you need to convert the grouper object into another object, which has length (e.g. list).
+        </p>
+        <p>
+            Using <a target="_blank" href="https://www.w3schools.com/python/python_lists_comprehension.asp">list comprehension</a> iterate over the groupby object and create a list of listed grouper objects for <b class="code">text1</b>.  
+        </p>
+        <pre class="brush: python">
+text1 = [list(g) for _, g in groupby(text)]
+        </pre>
+        <p>
+            Repeat the same for <b class="code">typed1</b>.
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Wow! We do so much with such a short line. How to properly compare these lists now?
+    </div>
+    <div class="answer">
+        <p>
+            We need to make a few comparisons and everyone must be <b class="code">True</b> to validate given strings match. We may join the comparisons with <b class="code">and</b> operator, but in this case we use <a target="_blank" href="https://www.w3schools.com/python/ref_func_all.asp">all()</a> function with a single sequence of conditions as argument.
+        </p>
+        <pre class="brush: python">
+return all((...))
+        </pre>
+        <p>
+            According to the description, the given strings should not be the same (no long-pressed letters). So, the first you must check if they are not equal.
+        </p>
+        <pre class="brush: python">
+return all((text != typed, ...))
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Ok, what should I check next?
+    </div>
+    <div class="answer">
+        <p>
+            The given strings may have long-pressed letters, but generally they should be the same. They must contain the same letters. Since each inner list in <b class="code">text1, typed1</b> represents a distinct letter, the length of <b class="code">text1</b> must be the same as the length of <b class="code">typed1</b>. This is your second condition.
+        </p>
+        <pre class="brush: python">
+return all((text != typed, len(typed1) == len(text1), ...))
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        I don't understand, how to compare each pair of inner lists from both general lists.
+    </div>
+    <div class="answer">
+        <p>
+            Yes, this step needs some additional explanations. First, use <a target="_blank" href="https://www.w3schools.com/python/ref_func_zip.asp">zip()</a> function and iterate over its result to make this pair comparison.
+        </p>
+        <pre class="brush: python">
+...for a, b in zip(text1, typed1)
+        </pre>
+        <p>
+            What we need these lists <b class="code">a, b</b> to be to validate long-pressed letters? Each list contain some number of the same letter, but we also need the same letter in both lists! So you need to compare any two elements from different lists.
+        </p>
+        <pre class="brush: python">
+a[0] == b[0]
+        </pre>
+        <p>
+            And if the letter is long-pressed, the number of letter in list from <b class="code">typed</b> string must be non less then in the list from <b class="code">text</b> string.
+        </p>
+        <pre class="brush: python">
+len(b) >= len(a)
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Help me please to join this last step together.
+    </div>
+    <div class="answer">
+        <p>
+            Using list comprehension create a list of the results of both conditions together (<b class="code">and</b> operator) after iterating over zipped general lists.
+        </p>
+        <pre class="brush: python">
+[b[0] == a[0] and len(b) >= len(a) for a, b in zip(text1, typed1)]
+        </pre>
+        <p>
+            But, here is a trick! Inside <b class="code">all()</b> functions should be a sequence of conditions, not a list. Use <a target="_blank" href="https://geekflare.com/python-unpacking-operators/">unpacking operator</a> to get out conditions from the list of conditions. With this operator you may include you list of conditions into the <b class="code">all()</b> function!
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        So, how my final solution should look like?
+    </div>
+    <div class="answer">
+        <p>
+            You just need to join all previous hints and wrap your code into function expression. Using type hints for input and output data are highly recommended.
+        </p>
+        <p>Here is the whole solution:</p>
+        <div class="spoiler">
+        <pre class="brush: python">
+from itertools import groupby
+
+
+def long_pressed(text: str, typed: str) -> bool:
+    
+    text1 = [list(g) for _, g in groupby(text)]
+    typed1 = [list(g) for _, g in groupby(typed)]
+    
+    return all((text != typed,
+                len(typed1) == len(text1),
+                *[b[0] == a[0] and len(b) >= len(a) for a, b in zip(text1, typed1)]))
+        </pre>
+        </div>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Show me more solutions!<br />
+        'Cause I wanna be a real 🥇 Python Ninnjaa!
+    </div>
+    <div class="answer">
+        <p>Sure, grab it!</p>
+        <p>
+            Using regular expression module add a special character <b class="code">+</b> (repeating) after each <b class="code">text</b> character, escape special characters (remove any possible special meaning from them) and compare the result string with <b class="code">typed</b>.
+        </p>
+        <div class="spoiler">
+        <pre class="brush: python">
+from re import sub, fullmatch
+
+
+def long_pressed(text: str, typed: str) -> bool:
+
+    pattern = sub(r'(\S)', r'\1+', text)
+    pattern = sub(r'([\'"/?!.,;])', r'\\\1', pattern)
+
+    return bool(fullmatch(pattern, typed)) and text != typed   
+        </pre>
+        </div>
+        <p>Click <b>Best Solutions</b> at mission menu and see a lot of other interesting solutions!</p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Thanks! I know and understand more now! Everything works fine!
+    </div>
+    <div class="answer">
+        👍 Glad to hear it!
+    </div>
+</div>
+</body>
