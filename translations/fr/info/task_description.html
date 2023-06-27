@@ -1,0 +1,35 @@
+<!-- Describe task in general -->
+<p>
+    <i>"Je vous aime tellement! Vous êtes le meilleur!!!"</i>
+</p>
+<p>
+    Il arrive que vos amis veuillent exprimer leurs sentiments dans un message ou qu'une touche contenant une lettre reste bloquée sur le clavier. Dans les deux cas, nous obtiendrons une "lettre longuement pressée" et la lettre sera alors imprimée plusieurs fois.
+    Vous disposez de deux chaînes de caractères. La première est le message textuel original. La seconde est un message imprimé, qui peut contenir plusieurs (ou éventuellement aucune) lettres longuement pressées. Il peut arriver que le message ait été écrit à la hâte, n'oubliez donc pas de vérifier que toutes les lettres correspondent à celles de l'original. Retournez <b>{% if is_js %}t{% else %}T{% endif %}rue</b> si le message imprimé correspond à l'original, en tenant compte d'éventuelles frappes longues. Ou <b>{% if is_js %}f{% else %}F{% endif %}alse</b> s'il y a des erreurs ou s'il n'y a pas de lettres longuement frappées.
+</p>
+<!-- Explain input and output values -->
+<p>
+   <strong>Entrée:</strong> Chaîne <span>(str{% if is_js %}ing{% endif %})</span>.
+</p>
+
+<p>
+   <strong>Sortie:</strong> Valeur logique <span>(bool{% if is_js %}ean{% endif %})</span>.
+</p>
+
+
+<!-- Put some usage examples -->
+<div class="for_info_only">
+<p>
+<strong>Exemples:</strong>
+</p>
+<pre class="brush: {% if is_js %}javascript{% else %}python{% endif %}">{{init_code_tmpl}}</pre>
+</div>
+
+<!-- Here you can explain some constraints for input-->
+<!-- The section is optional -->
+<p>
+    <strong>Conditions préalables:</strong>
+    <ul>
+    <li><i>"text" et "typed" sont constitués uniquement de lettres minuscules anglaises et de symboles "'/?!.,;</i></li>
+    <li><i>1 &lt;= len(text), len(typed) &lt;= 1000</i>.</li>
+    </ul>
+</p>
