@@ -1,0 +1,170 @@
+<body data-author="freeman_lex">
+<div class="question-answer">
+    <div class="question">
+        我不知道如何开始解决这项任务。
+    </div>
+    <div class="answer">
+        <p>
+            💡总体思路是将两个给定字符串拆分成相同字符的组列表（作为列表），然后逐对比较这两个列表。如果每对内部列表由相同字符组成，且<b class="code">typed</b> 变体列表的字符数至少与<b class="code">text</b> 列表的字符数相同，则给定信息匹配。   
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        好的，我应该从哪里开始呢？
+    </div>
+    <div class="answer">
+        <p>
+            您需要<a target="_blank" href="https://docs.python.org/3/library/itertools.html">itertools</a> 标准模块中的<a target="_blank" href="https://docs.python.org/3/library/itertools.html#itertools.groupby">groupby()</a> 函数来将两个字符串分割成组列表。所以导入它。
+        </p>
+        <pre class="brush: python">
+from itertools import groupby
+        </pre>
+        <p>
+            在字符串上应用<b class="code">groupby()</b> 后，您将收到一个 groupby 对象。如果对它进行遍历，你将得到带有不同字符和grouper对象的元组。本解决方案不需要字符（迭代时用"_"替换），但需要将grouper对象转换为另一个有长度的对象（例如list）。
+        </p>
+        <p>
+            使用<a target="_blank" href="https://www.w3schools.com/python/python_lists_comprehension.asp">list comprehension</a> 遍历 groupby 对象，并为<b class="code">text1</b> 创建一个列出 grouper 对象的列表。  
+        </p>
+        <pre class="brush: python">
+text1 = [list(g) for _, g in groupby(text)]
+        </pre>
+        <p>
+            对<b class="code">typed1</b> 重复同样的操作。
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        哇我们用这么短的一行做了这么多。现在如何正确比较这些列表？
+    </div>
+    <div class="answer">
+        <p>
+            我们需要进行一些比较，每个比较都必须是<b class="code">True</b> ，以验证给定的字符串是否匹配。我们可以使用<b class="code">and</b> 操作符来连接比较，但在本例中，我们使用<a target="_blank" href="https://www.w3schools.com/python/ref_func_all.asp">all()</a> 函数，以单个条件序列作为参数。
+        </p>
+        <pre class="brush: python">
+return all((...))
+        </pre>
+        <p>
+            根据描述，给定的字符串不应该相同（没有长按字母）。因此，首先必须检查它们是否不相等。
+        </p>
+        <pre class="brush: python">
+return all((text!= typed, ...))
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        好的，下一步我应该检查什么？
+    </div>
+    <div class="answer">
+        <p>
+            给定的字符串可能有长按字母，但通常它们应该是相同的。它们必须包含相同的字母。由于<b class="code">text1, typed1</b> 中的每个内层列表代表一个不同的字母，因此<b class="code">text1</b> 的长度必须与<b class="code">typed1</b> 的长度相同。这是您的第二个条件。
+        </p>
+        <pre class="brush: python">
+return all((text!= typed, len(typed1) == len(text1), ...))
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        我不明白如何比较两个一般列表中的每对内层列表。
+    </div>
+    <div class="answer">
+        <p>
+            是的，这一步需要一些额外的解释。首先，使用<a target="_blank" href="https://www.w3schools.com/python/ref_func_zip.asp">zip()</a> 函数并遍历其结果来进行成对比较。
+        </p>
+        <pre class="brush: python">
+...for a, b in zip(text1, typed1)
+        </pre>
+        <p>
+            我们需要这些列表<b class="code">a, b</b> 来验证长按字母？每个列表都包含一定数量的相同字母，但我们也需要两个列表中的字母相同！因此，您需要比较不同列表中的任意两个元素。
+        </p>
+        <pre class="brush: python">
+a[0] == b[0]
+        </pre>
+        <p>
+            如果字母是长按的，那么来自<b class="code">typed</b> 字符串的列表中的字母数量必须不少于来自<b class="code">text</b> 字符串的列表中的字母数量。
+        </p>
+        <pre class="brush: python">
+len(b)>= len(a)
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        请帮我把最后一步连接起来。
+    </div>
+    <div class="answer">
+        <p>
+            在对压缩的一般列表进行迭代后，使用列表理解创建一个包含两个条件结果的列表（<b class="code">and</b> 操作符）。
+        </p>
+        <pre class="brush: python">
+[b[0] == a[0] and len(b)>= len(a) for a, b in zip(text1, typed1)]
+        </pre>
+        <p>
+            但是，这里有一个技巧！<b class="code">all()</b> 函数内部应该是一个条件序列，而不是一个列表。使用<a target="_blank" href="https://geekflare.com/python-unpacking-operators/">unpacking operator</a> 从条件列表中取出条件。使用该操作符，您可以将条件列表包含在<b class="code">all()</b> 函数中！
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        那么，我的最终解决方案应该是怎样的呢？
+    </div>
+    <div class="answer">
+        <p>
+            您只需将之前所有的提示连接起来，并将代码封装为函数表达式。强烈建议对输入和输出数据使用类型提示。
+        </p>
+        <p>以下是整个解决方案：</p>
+        <div class="spoiler">
+        <pre class="brush: python">
+from itertools import groupby
+
+
+def long_pressed(text: str, typed: str) -> bool:
+    
+    text1 = [list(g) for _, g in groupby(text)]
+    typed1 = [list(g) for _, g in groupby(typed)]
+    
+    return all((text!= typed,
+                len(typed1) == len(text1),
+                *[b[0] == a[0] and len(b)>= len(a) for a, b in zip(text1, typed1)]))
+        </pre>
+        </div>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        告诉我更多解决方案！<br />
+        因为我想成为一个真正的 🥇 Python Ninnjaa！
+    </div>
+    <div class="answer">
+        <p>当然，抓住它！</p>
+        <p>
+            使用正则表达式模块在每个<b class="code">text</b> 字符后添加一个特殊字符<b class="code">+</b> (重复)，转义特殊字符（去除任何可能的特殊含义），然后将结果字符串与<b class="code">typed</b> 进行比较。
+        </p>
+        <div class="spoiler">
+        <pre class="brush: python">
+from re import sub, fullmatch
+
+
+def long_pressed(text: str, typed: str) -> bool:
+
+    pattern = sub(r'(\S)', r'\1+', text)
+    pattern = sub(r'([\'"/?!.,;])', r'\\\1', pattern)
+
+    return bool(fullmatch(pattern, typed)) and text!= typed   
+        </pre>
+        </div>
+        <p>点击任务菜单中的<b>Best Solutions</b> ，查看更多有趣的解决方案！</p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        谢谢！我现在知道并理解得更多了！一切正常！
+    </div>
+    <div class="answer">
+        很高兴听到这个消息！
+    </div>
+</div>
+</body>
