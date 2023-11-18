@@ -1,0 +1,170 @@
+<body data-author="freeman_lex">
+<div class="question-answer">
+    <div class="question">
+        Ich habe keine Ahnung, wie ich mit der Lösung dieser Aufgabe beginnen soll.
+    </div>
+    <div class="answer">
+        <p>
+            💡 Die allgemeine Idee ist, die beiden gegebenen Zeichenketten in Gruppen (als Listen) gleicher Zeichen aufzuteilen und diese beiden Listen paarweise zu vergleichen. Wenn jedes Paar der inneren Listen aus demselben Zeichen besteht und die Liste der Variante <b class="code">typed</b> mindestens dieselbe Anzahl von Zeichen aufweist wie die Liste von <b class="code">text</b>, dann stimmen die gegebenen Nachrichten überein.   
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Ok, womit soll ich beginnen?
+    </div>
+    <div class="answer">
+        <p>
+            Sie benötigen die Funktion <a target="_blank" href="https://docs.python.org/3/library/itertools.html#itertools.groupby">groupby()</a> aus dem Standardmodul <a target="_blank" href="https://docs.python.org/3/library/itertools.html">itertools</a>, um beide Zeichenketten in Listen von Gruppen aufzuteilen. Importieren Sie sie also.
+        </p>
+        <pre class="brush: python">
+from itertools import groupby
+        </pre>
+        <p>
+            Nachdem Sie <b class="code">groupby()</b> auf string angewendet haben, erhalten Sie ein groupby-Objekt. Wenn Sie darüber iterieren, erhalten Sie Tupel mit unterschiedlichen Zeichen und ein grouper-Objekt. Für diese Lösung benötigen Sie das Zeichen nicht (ersetzen Sie es bei der Iteration durch "_"), aber Sie müssen das grouper-Objekt in ein anderes Objekt umwandeln, das eine Länge hat (z.B. eine Liste).
+        </p>
+        <p>
+            Mit <a target="_blank" href="https://www.w3schools.com/python/python_lists_comprehension.asp">list comprehension</a> iterieren Sie über das groupby-Objekt und erstellen eine Liste der aufgelisteten grouper-Objekte für <b class="code">text1</b>. 
+        </p>
+        <pre class="brush: python">
+text1 = [list(g) for _, g in groupby(text)]
+        </pre>
+        <p>
+            Wiederholen Sie das Gleiche für <b class="code">typed1</b>.
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Wow! Wir machen so viel mit einer so kurzen Zeile. Wie kann man diese Listen nun richtig vergleichen?
+    </div>
+    <div class="answer">
+        <p>
+            Wir müssen ein paar Vergleiche anstellen und alle müssen <b class="code">True</b> sein, um zu überprüfen, ob die gegebenen Zeichenketten übereinstimmen. Wir können die Vergleiche mit dem Operator <b class="code">and</b> verbinden, aber in diesem Fall verwenden wir die Funktion <a target="_blank" href="https://www.w3schools.com/python/ref_func_all.asp">all()</a> mit einer einzigen Folge von Bedingungen als Argument.
+        </p>
+        <pre class="brush: python">
+return all((...))
+        </pre>
+        <p>
+            Gemäß der Beschreibung sollten die angegebenen Zeichenfolgen nicht gleich sein (keine langgedrückten Buchstaben). Sie müssen also zunächst prüfen, ob sie nicht gleich sind.
+        </p>
+        <pre class="brush: python">
+return all((text!= typed, ...))
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Ok, was soll ich als nächstes überprüfen?
+    </div>
+    <div class="answer">
+        <p>
+            Die angegebenen Zeichenketten können langgezogene Buchstaben haben, aber im Allgemeinen sollten sie gleich sein. Sie müssen die gleichen Buchstaben enthalten. Da jede innere Liste in <b class="code">text1, typed1</b> für einen bestimmten Buchstaben steht, muss die Länge von <b class="code">text1</b> gleich der Länge von <b class="code">typed1</b> sein. Dies ist Ihre zweite Bedingung.
+        </p>
+        <pre class="brush: python">
+return all((text!= typed, len(typed1) == len(text1), ...))
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Ich verstehe nicht, wie Sie jedes Paar innerer Listen aus beiden allgemeinen Listen vergleichen können.
+    </div>
+    <div class="answer">
+        <p>
+            Ja, dieser Schritt bedarf einiger zusätzlicher Erklärungen. Verwenden Sie zunächst die Funktion <a target="_blank" href="https://www.w3schools.com/python/ref_func_zip.asp">zip()</a> und iterieren Sie über deren Ergebnis, um diesen Paarvergleich durchzuführen.
+        </p>
+        <pre class="brush: python">
+...for a, b in zip(text1, typed1)
+        </pre>
+        <p>
+            Was müssen diese Listen <b class="code">a, b</b> sein, um lang gedrückte Buchstaben zu validieren? Jede Liste enthält eine gewisse Anzahl des gleichen Buchstabens, aber wir brauchen auch den gleichen Buchstaben in beiden Listen! Sie müssen also zwei beliebige Elemente aus verschiedenen Listen miteinander vergleichen.
+        </p>
+        <pre class="brush: python">
+a[0] == b[0]
+        </pre>
+        <p>
+            Und wenn es sich um einen langgedrückten Buchstaben handelt, darf die Anzahl der Buchstaben in der Liste von <b class="code">typed</b> nicht kleiner sein als in der Liste von <b class="code">text</b>.
+        </p>
+        <pre class="brush: python">
+len(b)>= len(a)
+        </pre>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Helfen Sie mir bitte, diesen letzten Schritt zusammenzufügen.
+    </div>
+    <div class="answer">
+        <p>
+            Erstellen Sie mit List Comprehension eine Liste mit den Ergebnissen beider Bedingungen zusammen (<b class="code">and</b> operator), nachdem Sie über gezippte allgemeine Listen iteriert haben.
+        </p>
+        <pre class="brush: python">
+[b[0] == a[0] and len(b)>= len(a) for a, b in zip(text1, typed1)]
+        </pre>
+        <p>
+            Aber, hier ist ein Trick! Innerhalb der <b class="code">all()</b> Funktionen sollte eine Folge von Bedingungen stehen, keine Liste. Verwenden Sie <a target="_blank" href="https://geekflare.com/python-unpacking-operators/">unpacking operator</a>, um die Bedingungen aus der Liste der Bedingungen herauszulösen. Mit diesem Operator können Sie die Liste der Bedingungen in die Funktion <b class="code">all()</b> einfügen!
+        </p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Wie sollte also meine endgültige Lösung aussehen?
+    </div>
+    <div class="answer">
+        <p>
+            Sie müssen nur alle vorherigen Hinweise zusammenführen und Ihren Code in einen Funktionsausdruck verpacken. Die Verwendung von Typ-Hinweisen für Eingabe- und Ausgabedaten wird dringend empfohlen.
+        </p>
+        <p>Hier ist die gesamte Lösung:</p>
+        <div class="spoiler">
+        <pre class="brush: python">
+from itertools import groupby
+
+
+def long_pressed(text: str, typed: str) -> bool:
+    
+    text1 = [list(g) for _, g in groupby(text)]
+    typed1 = [list(g) for _, g in groupby(typed)]
+    
+    return all((text!= typed,
+                len(typed1) == len(text1),
+                *[b[0] == a[0] and len(b)>= len(a) for a, b in zip(text1, typed1)]))
+        </pre>
+        </div>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Zeigen Sie mir mehr Lösungen!<br />
+        denn ich möchte ein echter 🥇 Python Ninnjaa sein!
+    </div>
+    <div class="answer">
+        <p>Klar, schnapp sie dir!</p>
+        <p>
+            Verwenden Sie das Modul für reguläre Ausdrücke, fügen Sie nach jedem <b class="code">text</b> Zeichen ein Sonderzeichen <b class="code">+</b> (sich wiederholend) ein, entschlüsseln Sie die Sonderzeichen (entfernen Sie jede mögliche Sonderbedeutung von ihnen) und vergleichen Sie die Ergebniszeichenfolge mit <b class="code">typed</b>.
+        </p>
+        <div class="spoiler">
+        <pre class="brush: python">
+from re import sub, fullmatch
+
+
+def long_pressed(text: str, typed: str) -> bool:
+
+    pattern = sub(r'(\S)', r'\1+', text)
+    pattern = sub(r'([\'"/?!.,;])', r'\\\1', pattern)
+
+    return bool(fullmatch(pattern, typed)) and text!= typed   
+        </pre>
+        </div>
+        <p>Klicken Sie auf <b>Best Solutions</b> im Missionsmenü und sehen Sie sich viele andere interessante Lösungen an!</p>
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Vielen Dank! Ich weiß und verstehe jetzt mehr! Alles funktioniert bestens!
+    </div>
+    <div class="answer">
+        👍 Freut mich zu hören!
+    </div>
+</div>
+</body>
